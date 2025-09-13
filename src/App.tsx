@@ -1,29 +1,24 @@
-import { Button } from "@/components/ui/button";
-import { useEffect, useState } from "react";
-
-// TODO: react router setup (habits and individual habits with schedule (grayed out if off day))
-// TODO: usecontext tailwind theme
-// TODO: habit storage with context
-// useContext, react router, local storage
-// theme context, habit context
+import { Route, Routes } from "react-router";
+import HomePage from "./components/Home";
+import HabitSettings from "./components/Habit"; // settings page for a single habit
+import Layout from "./Layout";
+import { ThemeProvider } from "@/components/theme-provider";
+import { HabitsProvider } from "./context/HabitsProvider";
 
 function App() {
-  const [count, setCount] = useState(
-    JSON.parse(localStorage.getItem("count") ?? "0")
-  );
-
-  const increment = () => {
-    setCount(count + 1);
-  };
-
-  useEffect(() => {
-    localStorage.setItem("count", JSON.stringify(count));
-  }, [count]);
-
   return (
-    <div className="flex min-h-svh flex-col items-center justify-center">
-      <h1 className="text-5xl mb-10">{count}</h1>
-      <Button onClick={increment}>Click me</Button>
+    <div className="App">
+      <ThemeProvider>
+        <HabitsProvider>
+          <Routes>
+            <Route path="/" element={<Layout />}>
+              <Route index element={<HomePage />} />
+              {/* Single habit settings page by id */}
+              <Route path="/habit/:id" element={<HabitSettings />} />
+            </Route>
+          </Routes>
+        </HabitsProvider>
+      </ThemeProvider>
     </div>
   );
 }
